@@ -1,15 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
 import { BallManager } from "../game/classes/BallManager";
 import { pad } from "../game/padding";
 import { WIDTH } from "../game/constants";
 
 export const Simulate = () => {
-  const navigate = useNavigate();
-
   const canvasRef = useRef<any>();
-  let [outputs, setOutputs] = useState<{ [key: number]: number[] }>({
+  let [outputs, setOutputs] = useState<{ 
+    [key: number]: number[] 
+  }>({
     0: [],
     1: [],
     2: [],
@@ -29,6 +28,8 @@ export const Simulate = () => {
     16: [],
     17: [],
   });
+
+  console.log(outputs);
 
   async function simulate(ballManager: BallManager) {
     let i = 0;
@@ -52,10 +53,12 @@ export const Simulate = () => {
           });
         }
       );
+
       simulate(ballManager);
 
       return () => {
         ballManager.stop();
+        console.log("stopped");
       };
     }
   }, [canvasRef]);
