@@ -3,38 +3,51 @@ import { BallManager } from "../game/classes/BallManager";
 import axios from "axios";
 import { Button } from "../components/ui";
 import { baseURL } from "../utils";
+import CountUp from 'react-countup';
 
 export function Game() {
   const [ballManager, setBallManager] = useState<BallManager>();
   const canvasRef = useRef<any>();
   const [totalResult, setTotalResult] = useState(0);
+  const [countUpKey, setCountUpKey] = useState(0);
+  let prevResult = 0;
 
   useEffect(() => {
     if (canvasRef.current) {
       const ballManager = new BallManager(
-        canvasRef.current as unknown as HTMLCanvasElement
+        canvasRef.current as HTMLCanvasElement
       );
       setBallManager(ballManager);
     }
   }, [canvasRef]);
 
+  useEffect(() => {
+    setCountUpKey(prevKey => prevKey + 1); // Update key to force re-render of CountUp
+  }, [totalResult, prevResult]);
+
   return (
     <div className="flex flex-col lg:flex-row items-center justify-center">
       <canvas ref={canvasRef} width="800" height="800"></canvas>
-      <div className="mt-5">
-        <h2>Total Result: {totalResult}</h2>
-      </div>
 
-      <div className="flex gap-5">
+      <div className="m-5">
+        <CountUp key={countUpKey} start={prevResult} end={totalResult} delay={0}>
+          {({ countUpRef }: { countUpRef: React.MutableRefObject<any> }) => (
+            <h1 className="display" ref={countUpRef}/>
+          )}
+        </CountUp>
+        <h2>Total Ressult: {totalResult}</h2>
+           
         <Button
           className="px-10"
           onClick={async () => {
             const response = await axios.post(`${baseURL}/game`, {
               data: 1,
             });
+            const ballValue = Math.round(response.data.point)
             if (ballManager) {
-              ballManager.addBall(response.data.point);
-              setTotalResult((prev) => prev + response.data.point);
+              ballManager.addBall(ballValue);
+              prevResult = totalResult;
+              setTotalResult((prev) => (prev + ballValue));
             }
           }}
         >

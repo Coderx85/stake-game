@@ -2,7 +2,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Simulation } from "./pages/Simulation";
 import { Game } from "./pages/Game";
-import { Footer, Navbar } from "./components";
+import { Navbar } from "./components";
 import { Home } from "./pages/Home";
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
         <Route path="/simulation" element={<Simulation />} />
         <Route path="/game" element={<Game />} />
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </BrowserRouter>
   );
 }

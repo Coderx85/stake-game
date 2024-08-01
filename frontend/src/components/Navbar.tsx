@@ -19,7 +19,7 @@ export const Navbar = () => {
             alt="plinkoo Logo"
           /> */}
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-            Plinkoo.100x
+            Stake
           </span>
         </Link>
         <Button

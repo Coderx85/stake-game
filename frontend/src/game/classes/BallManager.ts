@@ -11,6 +11,14 @@ export class BallManager {
     private sinks: Sink[]
     private requestId?: number;
     private onFinish?: (index: number,startX?: number) => void;
+    private startAnimation= () => {
+        const animate = () => {
+            this.draw()
+            this.requestId = requestAnimationFrame(animate)
+        }
+
+        this.requestId = requestAnimationFrame(animate)
+    }
 
     constructor(canvasRef: HTMLCanvasElement, onFinish?: (index: number,startX?: number) => void) {
         this.balls = [];
@@ -23,6 +31,13 @@ export class BallManager {
     }
 
     addBall(startX?: number) {
+        if(startX === 0){
+            return null
+        }
+        if (!this.requestId) {
+            this.startAnimation(); // Resume animation if it's not already running
+        }
+
         const newBall = new Ball(startX || pad(WIDTH / 2 + 13), pad(50), ballRadius, 'red', this.ctx, this.obstacles, this.sinks, (index) => {
             this.balls = this.balls.filter(ball => ball !== newBall);
             this.onFinish?.(index, startX)
@@ -88,7 +103,10 @@ export class BallManager {
 
     stop() {
         if (this.requestId) {
-            cancelAnimationFrame(this.requestId);
+            // this.addBall(0); // Set ball value to 0
+            cancelAnimationFrame(this.requestId); // Stop the animation
+            this.requestId = undefined; // Clear the requestId
         } 
+        this.balls = []
     }
 }
